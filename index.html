@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orar Semigrupa 1 — Sem. 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c1d;
+    --surface: #13132b;
+    --surface2: #1a1a3a;
+    --border: #2a2a50;
+    --text: #e8e8f0;
+    --text-dim: #8888aa;
+    --accent-odd: #a855f7;
+    --accent-even: #06b6d4;
+    --radius: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(168,85,247,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168,85,247,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+  header { text-align: center; margin-bottom: 32px; }
+  header h1 {
+    font-size: 2.2em;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { font-size: 0.95em; color: var(--text-dim); font-weight: 300; }
+  .week-info {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8em; color: var(--text-dim);
+  }
+  .badge {
+    display: inline-block; padding: 2px 10px;
+    border-radius: 20px; font-weight: 600; font-size: 0.85em;
+  }
+  .odd-badge { background: var(--accent-odd); color: #fff; }
+  .even-badge { background: var(--accent-even); color: #fff; }
+  .toggle-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+  .toggle {
+    display: flex; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 50px;
+    overflow: hidden; position: relative;
+  }
+  .toggle button {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9em; font-weight: 600;
+    padding: 10px 28px; border: none;
+    background: transparent; color: var(--text-dim);
+    cursor: pointer; transition: color 0.3s;
+    position: relative; z-index: 2;
+  }
+  .toggle button.active { color: #fff; }
+  .toggle .slider {
+    position: absolute; top: 3px; bottom: 3px;
+    border-radius: 50px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+  .toggle.odd .slider { left: 3px; width: calc(50% - 3px); background: var(--accent-odd); }
+  .toggle.even .slider { left: 50%; width: calc(50% - 3px); background: var(--accent-even); }
+
+  .legend {
+    display: flex; justify-content: center; gap: 20px;
+    flex-wrap: wrap; margin-bottom: 24px;
+    font-size: 0.8em; color: var(--text-dim);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  .schedule {
+    display: grid;
+    grid-template-columns: 70px repeat(5, 1fr);
+    gap: 3px; background: var(--border);
+    border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .cell {
+    background: var(--surface);
+    padding: 10px 8px; min-height: 60px;
+    display: flex; flex-direction: column; justify-content: center;
+    transition: background 0.3s;
+  }
+  .cell.header {
+    background: var(--surface2); text-align: center;
+    font-weight: 700; font-size: 0.85em;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    min-height: auto; padding: 12px 8px;
+  }
+  .cell.time-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78em; font-weight: 600;
+    text-align: center; color: var(--text-dim);
+    background: var(--surface2);
+  }
+  .cell.today-col {
+    background: rgba(168, 85, 247, 0.12);
+    box-shadow: inset 0 0 20px rgba(168,85,247,0.06);
+  }
+  .cell.today-header::after {
+    content: 'azi'; display: block;
+    font-size: 0.65em; color: var(--accent-odd);
+    font-weight: 400; letter-spacing: 0; text-transform: lowercase;
+  }
+  .cell.empty-cell { opacity: 0.4; }
+
+  .entry {
+    border-radius: 6px; padding: 8px;
+    margin: 2px 0; position: relative; overflow: hidden;
+    border-left: 3px solid transparent;
+  }
+  .entry.curs { background: rgba(90,90,160,0.25); border-left-color: #7777cc; }
+  .entry.proiect { background: rgba(120,50,140,0.25); border-left-color: #a855f7; }
+  .entry.lab { background: rgba(30,120,90,0.3); border-left-color: #10b981; }
+  .entry.seminar { background: rgba(120,100,30,0.25); border-left-color: #eab308; }
+
+  .entry-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65em; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px;
+  }
+  .entry.curs .entry-type { color: #9999dd; }
+  .entry.proiect .entry-type { color: #c084fc; }
+  .entry.lab .entry-type { color: #34d399; }
+  .entry.seminar .entry-type { color: #facc15; }
+
+  .entry-name { font-weight: 700; font-size: 0.88em; margin-bottom: 2px; }
+  .entry-loc { font-size: 0.72em; color: var(--text-dim); }
+  .entry-note { font-size: 0.68em; color: #e8c840; font-style: italic; margin-top: 2px; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .schedule .cell { animation: fadeSlideIn 0.4s ease both; }
+  .schedule .cell:nth-child(6n+2) { animation-delay: 0.03s; }
+  .schedule .cell:nth-child(6n+3) { animation-delay: 0.06s; }
+  .schedule .cell:nth-child(6n+4) { animation-delay: 0.09s; }
+  .schedule .cell:nth-child(6n+5) { animation-delay: 0.12s; }
+  .schedule .cell:nth-child(6n+6) { animation-delay: 0.15s; }
+
+  @media (max-width: 700px) {
+    .schedule { grid-template-columns: 50px repeat(5, 1fr); }
+    .cell { padding: 6px 4px; min-height: 48px; }
+    .entry { padding: 5px; }
+    .entry-name { font-size: 0.75em; }
+    .entry-loc { font-size: 0.62em; }
+    .entry-note { font-size: 0.6em; }
+    header h1 { font-size: 1.5em; }
+    .toggle button { padding: 8px 18px; font-size: 0.82em; }
+  }
+  footer {
+    text-align: center; margin-top: 40px;
+    font-size: 0.75em; color: var(--text-dim); opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Orar Semigrupa 1</h1>
+    <p>Semestrul 2 — 2025/2026</p>
+    <div class="week-info" id="weekInfo"></div>
+  </header>
+
+  <div class="toggle-wrap">
+    <div class="toggle odd" id="toggle">
+      <div class="slider"></div>
+      <button id="btnOdd" class="active" onclick="setWeek('odd')">Săpt. Impară</button>
+      <button id="btnEven" onclick="setWeek('even')">Săpt. Pară</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#7777cc"></div> Curs</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div> Proiect</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Laborator</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#eab308"></div> Seminar</div>
+  </div>
+
+  <div class="schedule" id="schedule"></div>
+  <footer>Verifică cu orarul oficial pentru orice neclaritate.</footer>
+</div>
+
+<script>
+const schedule = {
+  odd: {
+    luni: {
+      '18-20': [{ type: 'proiect', name: 'Sln', loc: 'Obs 303' }]
+    },
+    marti: {
+      '18-20': [{ type: 'curs', name: 'RAW + PIU', loc: 'Baritu H11, Prof. Enyedi (4h)' }]
+    },
+    miercuri: {
+      '12-14': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
+      '14-16': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
+      '18-20': [{ type: 'lab', name: 'PIU', loc: 'Obs 303', note: 'sapt 1, 5, 9, 13' }]
+    },
+    joi: {
+      '12-14': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
+      '14-16': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
+      '16-18': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
+      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritu 356, Prof. Miclea (4h)' }]
+    },
+    vineri: {
+      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritu 356, Prof. Naghiu' }],
+      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritu 356' }],
+      '18-20': [{ type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' }],
+      '20-22': [{ type: 'proiect', name: 'Sln', loc: 'Obs 303' }]
+    }
+  },
+  even: {
+    luni: {
+      '18-20': [{ type: 'lab', name: 'NSORC', loc: 'BT 6.03', note: 'sapt 2, 6, 10, 14' }]
+    },
+    marti: {
+      '18-20': [{ type: 'curs', name: 'RAW + PIU', loc: 'Baritu H11, Prof. Enyedi (4h)' }]
+    },
+    miercuri: {
+      '18-20': [{ type: 'lab', name: 'RAW', loc: 'Obs 303', note: 'sapt 2, 6, 10, 14' }]
+    },
+    joi: {
+      '16-18': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
+      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritu 356, Prof. Miclea (4h)' }]
+    },
+    vineri: {
+      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritu 356, Prof. Naghiu' }],
+      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritu 356' }],
+      '18-20': [
+        { type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' },
+        { type: 'lab', name: 'Sln', loc: 'Obs 303', note: 'sapt 2, 6, 10, 14' }
+      ]
+    }
+  }
+};
+
+const days = ['luni', 'marti', 'miercuri', 'joi', 'vineri'];
+const dayLabels = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
+const timeSlots = ['12-14', '14-16', '16-18', '18-20', '20-22'];
+
+let currentWeek = 'odd';
+
+function getTodayIndex() {
+  const d = new Date().getDay();
+  return (d >= 1 && d <= 5) ? d - 1 : -1;
+}
+
+function getSemesterWeek() {
+  const semStart = new Date(2026, 1, 16);
+  const now = new Date();
+  const diff = Math.floor((now - semStart) / (7 * 24 * 60 * 60 * 1000));
+  return (diff >= 0 && diff < 14) ? diff + 1 : null;
+}
+
+function typeLabel(t) {
+  return { curs: 'Curs', proiect: 'Proiect', lab: 'Lab', seminar: 'Seminar' }[t] || t;
+}
+
+function renderSchedule() {
+  const grid = document.getElementById('schedule');
+  const todayIdx = getTodayIndex();
+  const data = schedule[currentWeek];
+  let html = '';
+
+  html += '<div class="cell header" style="background:var(--bg)"></div>';
+  dayLabels.forEach((label, i) => {
+    const t = i === todayIdx;
+    html += '<div class="cell header ' + (t ? 'today-header today-col' : '') + '">' + label + '</div>';
+  });
+
+  timeSlots.forEach(slot => {
+    html += '<div class="cell time-cell">' + slot + '</div>';
+    days.forEach((day, i) => {
+      const t = i === todayIdx;
+      const entries = (data[day] && data[day][slot]) || [];
+      const empty = entries.length === 0;
+      html += '<div class="cell ' + (t ? 'today-col ' : '') + (empty ? 'empty-cell' : '') + '">';
+      if (empty) {
+        html += '<span style="color:var(--text-dim);font-size:0.75em;text-align:center;display:block">—</span>';
+      } else {
+        entries.forEach(e => {
+          html += '<div class="entry ' + e.type + '">';
+          html += '<div class="entry-type">' + typeLabel(e.type) + '</div>';
+          html += '<div class="entry-name">' + e.name + '</div>';
+          html += '<div class="entry-loc">' + e.loc + '</div>';
+          if (e.note) html += '<div class="entry-note">' + e.note + '</div>';
+          html += '</div>';
+        });
+      }
+      html += '</div>';
+    });
+  });
+
+  grid.innerHTML = html;
+}
+
+function setWeek(w) {
+  currentWeek = w;
+  document.getElementById('toggle').className = 'toggle ' + w;
+  document.getElementById('btnOdd').className = w === 'odd' ? 'active' : '';
+  document.getElementById('btnEven').className = w === 'even' ? 'active' : '';
+  renderSchedule();
+}
+
+function updateWeekInfo() {
+  const el = document.getElementById('weekInfo');
+  const wn = getSemesterWeek();
+  if (wn) {
+    const p = wn % 2 === 1 ? 'odd' : 'even';
+    const label = p === 'odd' ? 'Impară' : 'Pară';
+    const cls = p === 'odd' ? 'odd-badge' : 'even-badge';
+    el.innerHTML = 'Săptămâna ' + wn + ' — <span class="badge ' + cls + '">' + label + '</span>';
+    setWeek(p);
+  } else {
+    el.innerHTML = 'În afara semestrului';
+  }
+}
+
+updateWeekInfo();
+renderSchedule();
+</script>
+</body>
+</html>

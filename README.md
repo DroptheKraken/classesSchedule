@@ -7,4 +7,3 @@ Un orar interactiv pentru semigrupa 1, semestrul 2 (2025/2026).
 - Evidentierea automata a zilei curente
 - Detectarea automata a saptamanii curente din semestru
 - Color-coded: Cursuri, Proiecte, Laboratoare, Seminare
-- Responsive (merge si pe telefon)

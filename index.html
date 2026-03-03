@@ -66,6 +66,13 @@
   }
   .odd-badge { background: var(--accent-odd); color: #fff; }
   .even-badge { background: var(--accent-even); color: #fff; }
+    .controls { display: flex; justify-content: center; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .sg-selector { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 50px; overflow: hidden; position: relative; }
+  .sg-selector button { font-family: 'Outfit', sans-serif; font-size: 0.9em; font-weight: 600; padding: 10px 22px; border: none; background: transparent; color: var(--text-dim); cursor: pointer; transition: color 0.3s; position: relative; z-index: 2; }
+  .sg-selector button.active { color: #fff; }
+  .sg-selector .sg-slider { position: absolute; top: 3px; bottom: 3px; border-radius: 50px; background: #e05090; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
+  .sg-selector.sg1 .sg-slider { left: 3px; width: calc(50% - 3px); }
+  .sg-selector.sg2 .sg-slider { left: 50%; width: calc(50% - 3px); }
   .toggle-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
   .toggle {
     display: flex; background: var(--surface);
@@ -183,29 +190,22 @@
     text-align: center; margin-top: 40px;
     font-size: 0.75em; color: var(--text-dim); opacity: 0.6;
   }
-
-.sg-selector{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:50px;overflow:hidden;position:relative}
-.sg-selector button{font-family:'Outfit',sans-serif;font-size:.85em;font-weight:600;padding:10px 22px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;transition:color .3s;position:relative;z-index:2}
-.sg-selector button.active{color:#fff}
-.sg-selector .sg-slider{position:absolute;top:3px;bottom:3px;border-radius:50px;transition:all .35s cubic-bezier(.4,0,.2,1);z-index:1;background:#e05090}
-.sg-selector.sg1 .sg-slider{left:3px;width:calc(50% - 3px)}
-.sg-selector.sg2 .sg-slider{left:50%;width:calc(50% - 3px)}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>Orar Semigrupa 1</h1>
+    <h1>Orar Semestrul 2</h1>
     <p>Semestrul 2 — 2025/2026</p>
     <div class="week-info" id="weekInfo"></div>
   </header>
-  
-  <div class="toggle-wrap">
+
+  <div class="controls">
     <div class="sg-selector sg1" id="sgSel">
-    <div class="sg-slider"></div>
-    <button id="bSg1" class="active" onclick="setSg('sg1')">Semigrupa 1</button>
-    <button id="bSg2" onclick="setSg('sg2')">Semigrupa 2</button>
-  </div>
+      <div class="sg-slider"></div>
+      <button id="bSg1" class="active" onclick="setSg('sg1')">Semigrupa 1</button>
+      <button id="bSg2" onclick="setSg('sg2')">Semigrupa 2</button>
+    </div>
     <div class="toggle odd" id="toggle">
       <div class="slider"></div>
       <button id="btnOdd" class="active" onclick="setWeek('odd')">Săpt. Impară</button>
@@ -221,7 +221,7 @@
   </div>
 
   <div class="schedule" id="schedule"></div>
-  <footer>Verifică orarul oficial pentru orice neclaritate.</footer>
+  <footer>Verifică cu orarul oficial pentru orice neclaritate.</footer>
 </div>
 
 <script>
@@ -231,20 +231,24 @@ const sg1 = {
       '18-20': [{ type: 'proiect', name: 'Sln', loc: 'Obs 303' }]
     },
     marti: {
-      '18-20': [{ type: 'curs', name: 'RAW', loc: 'Baritiu H11, Prof. Enyedi (2h)' }]
+      '18-20': [{ type: 'curs', name: 'RAW + PIU', loc: 'Baritu H11, Prof. Enyedi (4h)' }]
     },
     miercuri: {
+      '12-14': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
+      '14-16': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
       '18-20': [{ type: 'lab', name: 'PIU', loc: 'Obs 303', note: 'sapt 1, 5, 9, 13' }]
     },
     joi: {
       '12-14': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
       '14-16': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
-      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritiu 356, Prof. Miclea (2h)' }]
+      '16-18': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
+      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritu 356, Prof. Miclea (4h)' }]
     },
     vineri: {
-      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritiu 356, Prof. Naghiu' }],
-      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritiu 356' }],
-      '18-20': [{ type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' }]
+      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritu 356, Prof. Naghiu' }],
+      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritu 356' }],
+      '18-20': [{ type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' }],
+      '20-22': [{ type: 'proiect', name: 'Sln', loc: 'Obs 303' }]
     }
   },
   even: {
@@ -252,21 +256,27 @@ const sg1 = {
       '18-20': [{ type: 'lab', name: 'NSORC', loc: 'BT 6.03', note: 'sapt 2, 6, 10, 14' }]
     },
     marti: {
-      '18-20': [{ type: 'curs', name: 'PIU', loc: 'Baritiu H11, Prof. Enyedi (2h)' }]
+      '18-20': [{ type: 'curs', name: 'RAW + PIU', loc: 'Baritu H11, Prof. Enyedi (4h)' }]
     },
     miercuri: {
       '18-20': [{ type: 'lab', name: 'RAW', loc: 'Obs 303', note: 'sapt 2, 6, 10, 14' }]
     },
     joi: {
-      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritiu 356, Prof. Miclea (2h)' }]
+      '16-18': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
+      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritu 356, Prof. Miclea (4h)' }]
     },
     vineri: {
-      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritiu 356, Prof. Naghiu' }],
-      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritiu 356' }],
-      '18-20': [{ type: 'lab', name: 'Sln', loc: 'Obs 303', note: 'sapt 2, 6, 10, 14' }]
+      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritu 356, Prof. Naghiu' }],
+      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritu 356' }],
+      '18-20': [
+        { type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' },
+        { type: 'lab', name: 'Sln', loc: 'Obs 303', note: 'sapt 2, 6, 10, 14' }
+      ]
     }
   }
 };
+
+
 
 const sg2 = {
   odd: {
@@ -274,18 +284,19 @@ const sg2 = {
       '20-22': [{ type: 'proiect', name: 'Sln', loc: 'Obs 303' }]
     },
     marti: {
-      '18-20': [{ type: 'curs', name: 'RAW', loc: 'Baritiu H11, Prof. Enyedi (2h)' }]
+      '18-20': [{ type: 'curs', name: 'RAW + PIU', loc: 'Baritu H11, Prof. Enyedi (4h)' }]
     },
     miercuri: {
       '18-20': [{ type: 'lab', name: 'PIU', loc: 'Obs 303', note: 'sapt 3, 7, 11, 13' }]
     },
     joi: {
-      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritiu 356, Prof. Miclea (2h)' }]
+      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritu 356, Prof. Miclea (4h)' }]
     },
     vineri: {
-      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritiu 356, Prof. Naghiu' }],
-      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritiu 356' }],
-      '18-20': [{ type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' }]
+      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritu 356, Prof. Naghiu' }],
+      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritu 356' }],
+      '18-20': [{ type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' }],
+      '20-22': [{ type: 'proiect', name: 'Sln', loc: 'Obs 303' }]
     }
   },
   even: {
@@ -293,10 +304,7 @@ const sg2 = {
       '18-20': [{ type: 'lab', name: 'NSORC', loc: 'BT 6.03', note: 'sapt 4, 8, 12, 14' }]
     },
     marti: {
-      '18-20': [
-        { type: 'curs', name: 'PIU', loc: 'Baritiu H11, Prof. Enyedi (2h)' },
-        { type: 'lab', name: 'Sln', loc: 'Obs 303', note: 'sapt 4, 8, 12, 14' }
-      ]
+      '18-20': [{ type: 'curs', name: 'RAW + PIU', loc: 'Baritu H11, Prof. Enyedi (4h)' }]
     },
     miercuri: {
       '18-20': [{ type: 'lab', name: 'RAW', loc: 'Obs 303', note: 'sapt 4, 8, 12, 14' }]
@@ -305,12 +313,15 @@ const sg2 = {
       '12-14': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
       '14-16': [{ type: 'proiect', name: 'PIU', loc: 'BT 6.04' }],
       '16-18': [{ type: 'proiect', name: 'RAW', loc: 'BT 6.04' }],
-      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritiu 356, Prof. Miclea (2h)' }]
+      '18-20': [{ type: 'curs', name: 'NSORC', loc: 'Baritu 356, Prof. Miclea (4h)' }]
     },
     vineri: {
-      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritiu 356, Prof. Naghiu' }],
-      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritiu 356' }],
-      '18-20': [{ type: 'lab', name: 'Sln', loc: 'Obs 303', note: 'sapt 4, 8, 12, 14' }]
+      '14-16': [{ type: 'curs', name: 'Com. Educațională', loc: 'Baritu 356, Prof. Naghiu' }],
+      '16-18': [{ type: 'seminar', name: 'Com. Educațională', loc: 'Baritu 356' }],
+      '18-20': [
+        { type: 'curs', name: 'Sln', loc: 'Obs 303, Prof. Mois' },
+        { type: 'lab', name: 'Sln', loc: 'Obs 303', note: 'sapt 4, 8, 12, 14' }
+      ]
     }
   }
 };
@@ -320,6 +331,7 @@ const dayLabels = ['Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri'];
 const timeSlots = ['12-14', '14-16', '16-18', '18-20', '20-22'];
 
 let currentWeek = 'odd';
+let currentSg = 'sg1';
 
 function getTodayIndex() {
   const d = new Date().getDay();
@@ -327,7 +339,7 @@ function getTodayIndex() {
 }
 
 function getSemesterWeek() {
-  const semStart = new Date(2026, 2, 3);
+  const semStart = new Date(2026, 1, 16);
   const now = new Date();
   const diff = Math.floor((now - semStart) / (7 * 24 * 60 * 60 * 1000));
   return (diff >= 0 && diff < 14) ? diff + 1 : null;
@@ -384,6 +396,14 @@ function setWeek(w) {
   renderSchedule();
 }
 
+
+function setSg(s) {
+  currentSg = s;
+  document.getElementById('sgSel').className = 'sg-selector ' + s;
+  document.getElementById('bSg1').className = s === 'sg1' ? 'active' : '';
+  document.getElementById('bSg2').className = s === 'sg2' ? 'active' : '';
+  renderSchedule();
+}
 function updateWeekInfo() {
   const el = document.getElementById('weekInfo');
   const wn = getSemesterWeek();
